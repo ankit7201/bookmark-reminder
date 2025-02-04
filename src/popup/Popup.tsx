@@ -7,7 +7,7 @@ const Popup = () => {
   return (
     <div>
       <Test />
-      <h1>Sample react component</h1>
+      <h1 className="underline font-bold">Sample react component</h1>
       <button onClick={() => setCount(count + 1)}>Count: {count}</button>
     </div>
   );

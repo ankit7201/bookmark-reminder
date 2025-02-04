@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { viteStaticCopy } from "vite-plugin-static-copy";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   // Tell Vite that your source files live in "src"
@@ -10,6 +11,7 @@ export default defineConfig({
   base: "./",
   plugins: [
     react(),
+    tailwindcss(),
     // Copy the manifest file/folder from the src root (remember: now the root is "src")
     viteStaticCopy({
       targets: [
