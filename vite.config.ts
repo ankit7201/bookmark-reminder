@@ -43,4 +43,7 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    open: "/src/popup/index.html",
+  },
 });

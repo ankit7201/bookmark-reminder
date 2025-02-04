@@ -4,10 +4,9 @@
   "version": "0.0.1",
   "description": "To remind user of a saved bookmark",
   "action": {
-    "default_popup": "index.html"
+    "default_popup": "src/popup/index.html"
   },
   "background": {
-    "service_woker": "background.js",
-    "type": "module"
+    "service_worker": "background/background.js"
   }
 }
