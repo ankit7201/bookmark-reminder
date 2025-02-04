@@ -1,14 +1,13 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { clearBatchText } from "../chrome/badge";
 
 const Popup = () => {
-  const [count, setCount] = useState(0);
+  // Clear batch text whenever popup opens
+  useEffect(() => {
+    clearBatchText();
+  }, []);
 
-  return (
-    <div>
-      <h1 className="underline font-bold">Sample react component</h1>
-      <button onClick={() => setCount(count + 1)}>Count: {count}</button>
-    </div>
-  );
+  return <div>Popup component</div>;
 };
 
 export default Popup;

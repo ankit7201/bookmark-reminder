@@ -15,7 +15,7 @@ chrome.bookmarks.onCreated.addListener(async (_id, bookmark) => {
   if (!bookmark.url) {
     return;
   }
-  console.log("checkpoint 1");
+
   const reminderDurationMilliseconds = await getBookmarkReminderDuration();
   const dateAdded = bookmark.dateAdded || Date.now();
 
@@ -27,10 +27,6 @@ chrome.bookmarks.onCreated.addListener(async (_id, bookmark) => {
     reminderDate: dateAdded + reminderDurationMilliseconds,
   };
 
-  console.log("checkpoint 2");
-
   await addBookmarkForReminder(addedBookmark);
-
-  console.log("checkpoint 3");
   await setBatchText("NEW");
 });
