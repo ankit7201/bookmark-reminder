@@ -4,6 +4,8 @@ const BOOKMARK_STORAGE_KEY: string = "bookmarks";
 const BOOKMARK_REMINDER_DURATION_KEY: string = "bookmarkReminderDuration";
 const BOOKMARK_NOTIFICATION_STORAGE_KEY: string = "bookmarskNotification";
 
+// ------------- Settings for local storage ------------
+
 export const updateBookmarkReminderTime = async (
   durationInMillisecond: number,
 ) => {
@@ -30,6 +32,14 @@ export const addBookmarkForReminder = async (bookmark: Bookmark) => {
   bookmarks.push(bookmark);
 
   await chrome.storage.local.set({ [BOOKMARK_STORAGE_KEY]: bookmarks });
+};
+
+export const getBookmarkForReminder = async (bookmarkId: string) => {
+  const result = await chrome.storage.local.get([BOOKMARK_STORAGE_KEY]);
+  const bookmarks: Bookmark[] = result[BOOKMARK_STORAGE_KEY] || [];
+
+  // TODO: Check if this can ever be null
+  return bookmarks.filter((bookmark) => bookmark.id === bookmarkId)[0];
 };
 
 export const getAllBookmarksForReminder = async () => {

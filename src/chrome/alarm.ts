@@ -6,7 +6,3 @@ export const createAlarm = async (
     when: whenInMilliseconds,
   });
 };
-
-chrome.alarms.onAlarm.addListener((alarm) => {
-  console.log("Alarm notification = ", alarm);
-});

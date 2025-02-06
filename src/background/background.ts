@@ -1,8 +1,14 @@
 import { createAlarm } from "../chrome/alarm";
-import { setBatchText } from "../chrome/badge";
 import {
+  setBatchTextForNewBookmark,
+  setBatchTextForNotification,
+} from "../chrome/badge";
+import {
+  addBookmarkForNotification,
   addBookmarkForReminder,
+  getBookmarkForReminder,
   getBookmarkReminderDuration,
+  removeBookmarkForReminder,
   updateBookmarkReminderTime,
 } from "../chrome/storage";
 import { DEFAULT_REMINDER_TIMER } from "../Constants";
@@ -31,5 +37,19 @@ chrome.bookmarks.onCreated.addListener(async (_id, bookmark) => {
 
   await createAlarm(`alarm-${bookmark.id}`, reminderDate);
   await addBookmarkForReminder(addedBookmark);
-  await setBatchText("NEW");
+
+  await setBatchTextForNewBookmark();
+});
+
+// ------------- Alarm -------------
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  const alarmId: string = alarm.name; // alarm name is same as bokmark id with "alarm-" in the beginning
+  const bookmarkId: string = alarmId.replace("alarm-", "");
+
+  const reminderBookmark: Bookmark = await getBookmarkForReminder(bookmarkId);
+
+  await addBookmarkForNotification(reminderBookmark);
+  await removeBookmarkForReminder(reminderBookmark.id);
+
+  await setBatchTextForNotification();
 });
