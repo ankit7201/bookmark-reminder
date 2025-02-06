@@ -30,7 +30,7 @@ const Popup = () => {
   }, []);
 
   return (
-    <div>
+    <div className="w-[450px] h-[600px]">
       <Tabs tabs={tabs} />
     </div>
   );

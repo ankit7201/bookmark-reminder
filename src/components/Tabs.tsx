@@ -5,7 +5,7 @@ const Tabs = ({ tabs }: { tabs: Tab[] }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   return (
     <React.Fragment>
-      <div className="mb-4  border-b border-gray-700">
+      <div className="fixed bg-gray-50 border-b border-gray-700 w-full">
         <ul className="flex text-sm font-medium text-center">
           {tabs.map((tab, _index) => (
             <li key={tab.id}>
@@ -24,7 +24,7 @@ const Tabs = ({ tabs }: { tabs: Tab[] }) => {
         {tabs.map((tab) => (
           <div
             key={tab.id}
-            className={`${activeTab === tab.id ? "block" : "hidden"}`}
+            className={`pt-16 ${activeTab === tab.id ? "block" : "hidden"}`}
           >
             {tab.content}
           </div>

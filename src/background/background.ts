@@ -30,7 +30,6 @@ chrome.bookmarks.onCreated.addListener(async (_id, bookmark) => {
   };
 
   await createAlarm(`alarm-${bookmark.id}`, reminderDate);
-
   await addBookmarkForReminder(addedBookmark);
   await setBatchText("NEW");
 });
