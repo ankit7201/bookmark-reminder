@@ -34,7 +34,7 @@ export const addBookmarkForReminder = async (bookmark: Bookmark) => {
 
 export const getAllBookmarksForReminder = async () => {
   const result = await chrome.storage.local.get([BOOKMARK_STORAGE_KEY]);
-  const bookmarks: Bookmark[] = result[BOOKMARK_STORAGE_KEY];
+  const bookmarks: Bookmark[] = result[BOOKMARK_STORAGE_KEY] || [];
 
   return bookmarks;
 };
@@ -69,7 +69,7 @@ export const getAllBookmarksForNotification = async () => {
   const result = await chrome.storage.local.get([
     BOOKMARK_NOTIFICATION_STORAGE_KEY,
   ]);
-  const bookmarks: Bookmark[] = result[BOOKMARK_NOTIFICATION_STORAGE_KEY];
+  const bookmarks: Bookmark[] = result[BOOKMARK_NOTIFICATION_STORAGE_KEY] || [];
 
   return bookmarks;
 };
@@ -78,7 +78,7 @@ export const removeBookmarkForNotification = async (bookmarkId: string) => {
   const result = await chrome.storage.local.get([
     BOOKMARK_NOTIFICATION_STORAGE_KEY,
   ]);
-  let bookmarks: Bookmark[] = result[BOOKMARK_NOTIFICATION_STORAGE_KEY];
+  let bookmarks: Bookmark[] = result[BOOKMARK_NOTIFICATION_STORAGE_KEY] || [];
 
   bookmarks = bookmarks.filter((bookmark) => bookmark.id !== bookmarkId);
   await chrome.storage.local.set({
