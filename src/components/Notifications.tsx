@@ -4,7 +4,6 @@ import { getAllBookmarksForNotification } from "../chrome/storage";
 import Card from "./Card";
 
 const Notifications = () => {
-  console.log("re rendered");
   const [localStorageChanged, setLocalStorageChanged] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);

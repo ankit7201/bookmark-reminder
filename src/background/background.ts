@@ -45,14 +45,11 @@ chrome.bookmarks.onCreated.addListener(async (_id, bookmark) => {
   await setBatchTextForNewBookmark();
 });
 
-chrome.bookmarks.onRemoved.addListener(async (id, removeInfo) => {
-  console.log("Bookmark removed");
-  console.log("id = ", id);
-  console.log("removeInfo = ", removeInfo);
+chrome.bookmarks.onRemoved.addListener(async (_id, removeInfo) => {
   const isFolder: boolean = !removeInfo.node.url;
 
   if (isFolder) {
-    await removeAllBookmarksForFolder(removeInfo.node.id);
+    await removeAllBookmarksForFolder(removeInfo);
   } else {
     await removeBookmark(removeInfo.node.id);
   }
