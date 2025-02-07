@@ -4,6 +4,8 @@ const BOOKMARK_STORAGE_KEY: string = "bookmarks";
 const BOOKMARK_REMINDER_DURATION_KEY: string = "bookmarkReminderDuration";
 const BOOKMARK_NOTIFICATION_STORAGE_KEY: string = "bookmarskNotification";
 
+// TODO: Move all these functions to bookmarks.ts file
+
 // ------------- Settings for local storage ------------
 
 export const updateBookmarkReminderTime = async (
@@ -41,7 +43,7 @@ export const getBookmarkForReminder = async (bookmarkId: string) => {
   if (bookmarks.length === 0) {
     return null;
   }
-
+  // TODO: Make this better. What happen when filter doesn't return anything
   return bookmarks.filter((bookmark) => bookmark.id === bookmarkId)[0];
 };
 
@@ -76,6 +78,26 @@ export const addBookmarkForNotification = async (bookmark: Bookmark) => {
   await chrome.storage.local.set({
     [BOOKMARK_NOTIFICATION_STORAGE_KEY]: bookmarkskNotifications,
   });
+};
+
+export const getBookmarkForNotification = async (bookmarkId: string) => {
+  const result = await chrome.storage.local.get([
+    BOOKMARK_NOTIFICATION_STORAGE_KEY,
+  ]);
+  const bookmarks: Bookmark[] = result[BOOKMARK_NOTIFICATION_STORAGE_KEY] || [];
+  if (bookmarks.length === 0) {
+    return null;
+  }
+
+  const bookmark: Bookmark[] = bookmarks.filter(
+    (item) => item.id === bookmarkId,
+  );
+
+  if (bookmark.length === 0) {
+    return null;
+  }
+
+  return bookmark[0];
 };
 
 export const getAllBookmarksForNotification = async () => {

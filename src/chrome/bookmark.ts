@@ -1,8 +1,10 @@
 import { BookmarkNode, FolderNode, RemoveInfo } from "../types/RemoveInfo";
+import { removeAlarm } from "./alarm";
 import { removeBookmarkForReminder } from "./storage";
 
+// TODO: Name this removeBookmarkAndAlarm
 export const removeBookmark = async (bookmarkId: string) => {
-  await chrome.alarms.clear(`alarm-${bookmarkId}`);
+  await removeAlarm(`$alarm-{bookmarkId}`);
   await removeBookmarkForReminder(bookmarkId);
 };
 

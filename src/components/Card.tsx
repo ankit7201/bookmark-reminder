@@ -34,7 +34,9 @@ const Card = ({
           {cardButtons &&
             cardButtons.map((button) => (
               <button
-                onClick={button.onClick}
+                onClick={() => {
+                  button.onClick(bookmark.id);
+                }}
                 className="flex items-center px-2 py-1 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors rounded"
               >
                 {button.icon}
