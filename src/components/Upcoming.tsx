@@ -2,6 +2,18 @@ import { useEffect, useState } from "react";
 import { Bookmark } from "../types/Bookmark";
 import { getAllBookmarksForReminder } from "../chrome/storage";
 import Card from "./Card";
+import { CardButton } from "../types/CardButton";
+import { Trash2 } from "lucide-react";
+
+const cardButtons: CardButton[] = [
+  {
+    title: "Delete Reminder",
+    icon: <Trash2 size={12} />,
+    onClick: () => {
+      console.log("Delete Reminder button clicked");
+    },
+  },
+];
 
 const Upcoming = () => {
   const [localStorageChanged, setLocalStorageChanged] =
@@ -36,7 +48,7 @@ const Upcoming = () => {
   return (
     <div>
       {bookmarks.map((bookmark) => (
-        <Card bookmark={bookmark} />
+        <Card bookmark={bookmark} cardButtons={cardButtons} />
       ))}
     </div>
   );

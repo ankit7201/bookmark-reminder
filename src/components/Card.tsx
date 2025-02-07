@@ -1,7 +1,14 @@
-import { Bell, Clock, Trash2 } from "lucide-react";
+import { Clock } from "lucide-react";
 import { Bookmark } from "../types/Bookmark";
+import { CardButton } from "../types/CardButton";
 
-const Card = ({ bookmark }: { bookmark: Bookmark }) => {
+const Card = ({
+  bookmark,
+  cardButtons,
+}: {
+  bookmark: Bookmark;
+  cardButtons: CardButton[];
+}) => {
   return (
     <div
       key={bookmark.id}
@@ -24,14 +31,16 @@ const Card = ({ bookmark }: { bookmark: Bookmark }) => {
           </div>
         </div>
         <div className="flex flex-col space-y-1.5 opacity-0 w-[30%] group-hover:opacity-100">
-          <button className="flex items-center px-2 py-1 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors rounded">
-            <Bell size={12} className="mr-1" />
-            Remind Again Later
-          </button>
-          <button className="flex items-center px-2 py-1 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors rounded">
-            <Trash2 size={12} className="mr-2" />
-            Delete Reminder
-          </button>
+          {cardButtons &&
+            cardButtons.map((button) => (
+              <button
+                onClick={button.onClick}
+                className="flex items-center px-2 py-1 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors rounded"
+              >
+                {button.icon}
+                {button.title}
+              </button>
+            ))}
         </div>
       </div>
     </div>
