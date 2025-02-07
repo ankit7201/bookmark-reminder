@@ -4,8 +4,20 @@ import { getAllBookmarksForReminder } from "../chrome/storage";
 import Card from "./Card";
 
 const Upcoming = () => {
+  const [localStorageChanged, setLocalStorageChanged] =
+    useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>();
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setLocalStorageChanged(!localStorageChanged);
+    };
+
+    chrome.storage.onChanged.addListener(handleStorageChange);
+
+    return () => chrome.storage.onChanged.removeListener(handleStorageChange);
+  });
 
   useEffect(() => {
     async function getAllUpcomingBookmarks() {
@@ -15,7 +27,7 @@ const Upcoming = () => {
     }
 
     getAllUpcomingBookmarks();
-  }, []);
+  }, [localStorageChanged]);
 
   if (isLoading) {
     return <div>Loading...</div>;

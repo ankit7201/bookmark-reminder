@@ -4,8 +4,22 @@ import { getAllBookmarksForNotification } from "../chrome/storage";
 import Card from "./Card";
 
 const Notifications = () => {
+  console.log("re rendered");
+  const [localStorageChanged, setLocalStorageChanged] =
+    useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+
+  // TODO: Extract this out to a custom hook
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setLocalStorageChanged(!localStorageChanged);
+    };
+
+    chrome.storage.onChanged.addListener(handleStorageChange);
+
+    return () => chrome.storage.onChanged.removeListener(handleStorageChange);
+  });
 
   useEffect(() => {
     async function getAllNotificationBookmarks() {
@@ -17,7 +31,7 @@ const Notifications = () => {
     }
 
     getAllNotificationBookmarks();
-  }, []);
+  }, [localStorageChanged]);
 
   if (isLoading) {
     return <div>Loading...</div>;

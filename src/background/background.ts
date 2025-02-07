@@ -4,6 +4,10 @@ import {
   setBatchTextForNotification,
 } from "../chrome/badge";
 import {
+  removeAllBookmarksForFolder,
+  removeBookmark,
+} from "../chrome/bookmark";
+import {
   addBookmarkForNotification,
   addBookmarkForReminder,
   getBookmarkForReminder,
@@ -41,12 +45,29 @@ chrome.bookmarks.onCreated.addListener(async (_id, bookmark) => {
   await setBatchTextForNewBookmark();
 });
 
+chrome.bookmarks.onRemoved.addListener(async (id, removeInfo) => {
+  console.log("Bookmark removed");
+  console.log("id = ", id);
+  console.log("removeInfo = ", removeInfo);
+  const isFolder: boolean = !removeInfo.node.url;
+
+  if (isFolder) {
+    await removeAllBookmarksForFolder(removeInfo.node.id);
+  } else {
+    await removeBookmark(removeInfo.node.id);
+  }
+});
+
 // ------------- Alarm -------------
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   const alarmId: string = alarm.name; // alarm name is same as bokmark id with "alarm-" in the beginning
   const bookmarkId: string = alarmId.replace("alarm-", "");
 
-  const reminderBookmark: Bookmark = await getBookmarkForReminder(bookmarkId);
+  const reminderBookmark: Bookmark | null =
+    await getBookmarkForReminder(bookmarkId);
+  if (!reminderBookmark) {
+    return;
+  }
 
   await addBookmarkForNotification(reminderBookmark);
   await removeBookmarkForReminder(reminderBookmark.id);

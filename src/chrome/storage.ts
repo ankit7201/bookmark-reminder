@@ -38,7 +38,10 @@ export const getBookmarkForReminder = async (bookmarkId: string) => {
   const result = await chrome.storage.local.get([BOOKMARK_STORAGE_KEY]);
   const bookmarks: Bookmark[] = result[BOOKMARK_STORAGE_KEY] || [];
 
-  // TODO: Check if this can ever be null
+  if (bookmarks.length === 0) {
+    return null;
+  }
+
   return bookmarks.filter((bookmark) => bookmark.id === bookmarkId)[0];
 };
 
