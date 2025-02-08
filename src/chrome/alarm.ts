@@ -11,6 +11,6 @@ export const removeAlarm = async (alarmName: string) => {
   try {
     await chrome.alarms.clear(alarmName);
   } catch (err) {
-    console.info("Cannot remove alarm", err);
+    console.log("Cannot remove alarm", err);
   }
 };
