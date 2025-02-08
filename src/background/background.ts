@@ -1,6 +1,7 @@
 import {
   checkAlarmsForAllUpcomingBookmarks,
   createAlarm,
+  removeAlarm,
 } from "../chrome/alarm";
 import {
   setBatchTextForNewBookmark,
@@ -15,17 +16,28 @@ import {
   addBookmarkForReminder,
   getBookmarkForReminder,
   getBookmarkReminderDuration,
+  getExtensionState,
   removeBookmarkForReminder,
+  setExtensionState,
+  setReminderDurationTimeUnit,
   updateBookmarkReminderTime,
 } from "../chrome/storage";
 import { DEFAULT_REMINDER_TIMER } from "../Constants";
 import { Bookmark } from "../types/Bookmark";
+import { ExtensionState } from "../types/ExtensionState";
 
 chrome.runtime.onInstalled.addListener(async () => {
   await updateBookmarkReminderTime(DEFAULT_REMINDER_TIMER);
+  await setExtensionState(ExtensionState.ENABLED);
+  await setReminderDurationTimeUnit("days");
 });
 
 chrome.bookmarks.onCreated.addListener(async (_id, bookmark) => {
+  const extensionState: ExtensionState = await getExtensionState();
+  if (extensionState == ExtensionState.DISABLED) {
+    return;
+  }
+
   if (!bookmark.url || !bookmark.id) {
     return;
   }
@@ -71,16 +83,15 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 
   await addBookmarkForNotification(reminderBookmark);
   await removeBookmarkForReminder(reminderBookmark.id);
+  await removeAlarm(alarmId); // In case fired alarm is not automatically deleted
 
   await setBatchTextForNotification();
 });
 
 self.addEventListener("activate", (event) => {
-  console.log("Service worker activated");
   // @ts-ignore
   event.waitUntil(
     (async () => {
-      console.log("Calling alarm check function");
       await checkAlarmsForAllUpcomingBookmarks();
     })(),
   );

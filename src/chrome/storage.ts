@@ -1,8 +1,32 @@
 import { Bookmark } from "../types/Bookmark";
+import { ExtensionState } from "../types/ExtensionState";
 
 const BOOKMARK_STORAGE_KEY: string = "bookmarks";
 const BOOKMARK_REMINDER_DURATION_KEY: string = "bookmarkReminderDuration";
 const BOOKMARK_NOTIFICATION_STORAGE_KEY: string = "bookmarskNotification";
+const EXTENSION_ENABLED_KEY: string = "extensionEnabled";
+const REMINDER_DURATION_TIMEUNIT_KEY: string = "reminderDurationTimeUnit";
+
+export const setReminderDurationTimeUnit = async (unit: string) => {
+  await chrome.storage.local.set({ [REMINDER_DURATION_TIMEUNIT_KEY]: unit });
+};
+
+export const getReminderDurationTimeUnit = async () => {
+  const result = await chrome.storage.local.get([
+    REMINDER_DURATION_TIMEUNIT_KEY,
+  ]);
+  return result[REMINDER_DURATION_TIMEUNIT_KEY];
+};
+
+//--------------- Extension Enabled Settins -----------
+export const setExtensionState = async (extensionState: ExtensionState) => {
+  await chrome.storage.local.set({ [EXTENSION_ENABLED_KEY]: extensionState });
+};
+
+export const getExtensionState = async () => {
+  const result = await chrome.storage.local.get([EXTENSION_ENABLED_KEY]);
+  return result[EXTENSION_ENABLED_KEY];
+};
 
 // TODO: Move all these functions to bookmarks.ts file
 
