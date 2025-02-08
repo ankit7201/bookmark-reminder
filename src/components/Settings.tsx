@@ -235,7 +235,8 @@ const Settings: React.FC = () => {
               <p className="flex items-center justify-center space-x-1">
                 <Bell className="w-4 h-4" />
                 <span>
-                  Reminding every {settings.duration || "0"} {settings.timeUnit}
+                  All new bookmarks will have their reminder in{" "}
+                  {settings.duration || "0"} {settings.timeUnit}
                 </span>
               </p>
             ) : (
