@@ -1,6 +1,8 @@
 import { Clock } from "lucide-react";
 import { Bookmark } from "../types/Bookmark";
 import { CardButton } from "../types/CardButton";
+import { getHumanDateFromEpoch } from "../utils/date";
+import { openUrlInNewTab } from "../chrome/tabs";
 
 const Card = ({
   bookmark,
@@ -11,6 +13,9 @@ const Card = ({
 }) => {
   return (
     <div
+      onClick={() => {
+        openUrlInNewTab(bookmark.url);
+      }}
       key={bookmark.id}
       className="mb-2 group border border-gray-100 p-3 mx-2 transition-all duration-150 east-in-out hover:border-l-2 hover:border-l-indigo-500 hover:bg-indigo-50/30 hover:translate-x-0.5"
     >
@@ -25,9 +30,15 @@ const Card = ({
           >
             {bookmark.url}
           </a>
-          <div className="flex items-center text-gray-400 text-xs">
+          <div className="flex items-center text-green-400 text-xs">
             <Clock size={12} />
-            <span>Saved on {bookmark.dateAdded}</span>
+            <span>Saved on {getHumanDateFromEpoch(bookmark.dateAdded)}</span>
+          </div>
+          <div className="flex items-center text-blue-400 text-xs">
+            <Clock size={12} />
+            <span>
+              Reminder on {getHumanDateFromEpoch(bookmark.reminderDate)}
+            </span>
           </div>
         </div>
         <div className="flex flex-col space-y-1.5 opacity-0 w-[30%] group-hover:opacity-100">

@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import { Bookmark } from "../types/Bookmark";
-import { getAllBookmarksForReminder } from "../chrome/storage";
+import {
+  getAllBookmarksForReminder,
+  removeBookmarkForReminder,
+} from "../chrome/storage";
 import Card from "./Card";
 import { CardButton } from "../types/CardButton";
 import { Trash2 } from "lucide-react";
+import { removeAlarm } from "../chrome/alarm";
 
 const cardButtons: CardButton[] = [
   {
     title: "Delete Reminder",
     icon: <Trash2 size={12} />,
-    onClick: () => {
-      console.log("Delete Reminder button clicked");
+    onClick: async (bookmarkId: string) => {
+      await removeBookmarkForReminder(bookmarkId);
+      await removeAlarm(`alarm-${bookmarkId}`);
     },
   },
 ];
