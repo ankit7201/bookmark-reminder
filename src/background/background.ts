@@ -1,4 +1,7 @@
-import { createAlarm } from "../chrome/alarm";
+import {
+  checkAlarmsForAllUpcomingBookmarks,
+  createAlarm,
+} from "../chrome/alarm";
 import {
   setBatchTextForNewBookmark,
   setBatchTextForNotification,
@@ -70,4 +73,15 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   await removeBookmarkForReminder(reminderBookmark.id);
 
   await setBatchTextForNotification();
+});
+
+self.addEventListener("activate", (event) => {
+  console.log("Service worker activated");
+  // @ts-ignore
+  event.waitUntil(
+    (async () => {
+      console.log("Calling alarm check function");
+      await checkAlarmsForAllUpcomingBookmarks();
+    })(),
+  );
 });
