@@ -1,14 +1,37 @@
-import { useState } from "react";
-import Test from "../components/Test";
+import { useEffect } from "react";
+import { clearBatchText } from "../chrome/badge";
+import Tabs from "../components/Tabs";
+import Notifications from "../components/Notifications";
+import Upcoming from "../components/Upcoming";
+import Settings from "../components/Settings";
+
+const tabs = [
+  {
+    id: "notifications",
+    label: "Notififactions",
+    content: <Notifications />,
+  },
+  {
+    id: "upcoming",
+    label: "Upcoming",
+    content: <Upcoming />,
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    content: <Settings />,
+  },
+];
 
 const Popup = () => {
-  const [count, setCount] = useState(0);
+  // Clear batch text whenever popup opens
+  useEffect(() => {
+    clearBatchText();
+  }, []);
 
   return (
-    <div>
-      <Test />
-      <h1 className="underline font-bold">Sample react component</h1>
-      <button onClick={() => setCount(count + 1)}>Count: {count}</button>
+    <div className="w-[450px] h-[600px]">
+      <Tabs tabs={tabs} />
     </div>
   );
 };
