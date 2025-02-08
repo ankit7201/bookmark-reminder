@@ -2,6 +2,7 @@ import { Bookmark as BookmarkIcon, Clock } from "lucide-react";
 import { Bookmark } from "../types/Bookmark";
 import { CardButton } from "../types/CardButton";
 import { getHumanDateFromEpoch } from "../utils/date";
+import { openUrlInNewTab } from "../chrome/tabs";
 
 const Card = ({
   bookmark,
@@ -12,6 +13,9 @@ const Card = ({
 }) => {
   return (
     <div
+      onClick={() => {
+        openUrlInNewTab(bookmark.url);
+      }}
       key={bookmark.id}
       className="mb-2 group border border-gray-100 p-3 mx-2 transition-all duration-150 east-in-out hover:border-l-2 hover:border-l-indigo-500 hover:bg-indigo-50/30 hover:translate-x-0.5"
     >
