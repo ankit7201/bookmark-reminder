@@ -1,23 +1,16 @@
 import {
   checkAlarmsForAllUpcomingBookmarks,
   createAlarm,
-  removeAlarm,
 } from "../chrome/alarm";
-import {
-  setBatchTextForNewBookmark,
-  setBatchTextForNotification,
-} from "../chrome/badge";
+import { setBatchTextForNewBookmark } from "../chrome/badge";
 import {
   removeAllBookmarksForFolder,
   removeBookmark,
 } from "../chrome/bookmark";
 import {
-  addBookmarkForNotification,
   addBookmarkForReminder,
-  getBookmarkForReminder,
   getBookmarkReminderDuration,
   getExtensionState,
-  removeBookmarkForReminder,
   setExtensionState,
   setReminderDurationTimeUnit,
   updateBookmarkReminderTime,
@@ -25,6 +18,11 @@ import {
 import { DEFAULT_REMINDER_TIMER } from "../Constants";
 import { Bookmark } from "../types/Bookmark";
 import { ExtensionState } from "../types/ExtensionState";
+import { AlarmQueue } from "../utils/AlarmQueue";
+
+let initComplete = (async () => {
+  await checkAlarmsForAllUpcomingBookmarks();
+})();
 
 chrome.runtime.onInstalled.addListener(async () => {
   await updateBookmarkReminderTime(DEFAULT_REMINDER_TIMER);
@@ -33,6 +31,8 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 chrome.bookmarks.onCreated.addListener(async (_id, bookmark) => {
+  await initComplete;
+
   const extensionState: ExtensionState = await getExtensionState();
   if (extensionState == ExtensionState.DISABLED) {
     return;
@@ -61,6 +61,8 @@ chrome.bookmarks.onCreated.addListener(async (_id, bookmark) => {
 });
 
 chrome.bookmarks.onRemoved.addListener(async (_id, removeInfo) => {
+  await initComplete;
+
   const isFolder: boolean = !removeInfo.node.url;
 
   if (isFolder) {
@@ -70,29 +72,25 @@ chrome.bookmarks.onRemoved.addListener(async (_id, removeInfo) => {
   }
 });
 
+const alarmQueue = new AlarmQueue();
+
 // ------------- Alarm -------------
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  const alarmId: string = alarm.name; // alarm name is same as bokmark id with "alarm-" in the beginning
-  const bookmarkId: string = alarmId.replace("alarm-", "");
+  await initComplete;
 
-  const reminderBookmark: Bookmark | null =
-    await getBookmarkForReminder(bookmarkId);
-  if (!reminderBookmark) {
-    return;
-  }
+  // const alarmId: string = alarm.name; // alarm name is same as bokmark id with "alarm-" in the beginning
+  // const bookmarkId: string = alarmId.replace("alarm-", "");
 
-  await addBookmarkForNotification(reminderBookmark);
-  await removeBookmarkForReminder(reminderBookmark.id);
-  await removeAlarm(alarmId); // In case fired alarm is not automatically deleted
+  // const reminderBookmark: Bookmark | null =
+  //   await getBookmarkForReminder(bookmarkId);
+  // if (!reminderBookmark) {
+  //   return;
+  // }
 
-  await setBatchTextForNotification();
-});
+  // await addBookmarkForNotification(reminderBookmark);
+  // await removeBookmarkForReminder(reminderBookmark.id);
+  // await removeAlarm(alarmId); // In case fired alarm is not automatically deleted
 
-self.addEventListener("activate", (event) => {
-  // @ts-ignore
-  event.waitUntil(
-    (async () => {
-      await checkAlarmsForAllUpcomingBookmarks();
-    })(),
-  );
+  // await setBatchTextForNotification();
+  alarmQueue.enqueue(alarm);
 });

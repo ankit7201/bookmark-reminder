@@ -1,16 +1,23 @@
 import { Bookmark } from "../types/Bookmark";
+import { setBatchTextForNotification } from "./badge";
 import {
+  addBookmarkForNotification,
   getAllBookmarksForNotification,
   getAllBookmarksForReminder,
+  removeBookmarkForReminder,
 } from "./storage";
 
 export const createAlarm = async (
   alaramName: string,
   whenInMilliseconds: number,
 ) => {
-  await chrome.alarms.create(alaramName, {
-    when: whenInMilliseconds,
-  });
+  try {
+    await chrome.alarms.create(alaramName, {
+      when: whenInMilliseconds,
+    });
+  } catch (err) {
+    console.log("error while creating alarm", err);
+  }
 };
 
 export const removeAlarm = async (alarmName: string) => {
@@ -29,6 +36,10 @@ export const getAlarm = async (alarmName: string) => {
 // sure alarms are set. If not, set them again
 export const checkAlarmsForAllUpcomingBookmarks = async () => {
   const upcomingBookmarks: Bookmark[] = await getAllBookmarksForReminder();
+  if (upcomingBookmarks.length === 0) {
+    return;
+  }
+
   const notificationBookmarks: Bookmark[] =
     await getAllBookmarksForNotification();
   const currentTime = Date.now();
@@ -40,16 +51,18 @@ export const checkAlarmsForAllUpcomingBookmarks = async () => {
       if (!alarm) {
         // If alarm doesn't exist, create alarm again
         await createAlarm(`alarm-${bookmark.id}`, bookmark.reminderDate);
-      } else if (bookmark.reminderDate < currentTime) {
-        // check if alarm for this fired or not
-        const alreadyFired: boolean = notificationBookmarks.some(
-          (item) => item.id === bookmark.id,
-        );
+      }
+    } else if (bookmark.reminderDate < currentTime) {
+      // check if alarm for this fired or not
+      const alreadyFired: boolean = notificationBookmarks.some(
+        (item) => item.id === bookmark.id,
+      );
 
-        if (!alreadyFired) {
-          // alarm with past time immediately fires
-          await createAlarm(`alarm-${bookmark.id}`, bookmark.reminderDate);
-        }
+      if (!alreadyFired) {
+        await addBookmarkForNotification(bookmark);
+        await removeBookmarkForReminder(bookmark.id);
+        await removeAlarm(`alarm-${bookmark.id}`); // In case fired alarm is not automatically deleted
+        await setBatchTextForNotification();
       }
     }
   }

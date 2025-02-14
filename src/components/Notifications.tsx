@@ -79,6 +79,14 @@ const Notifications = () => {
     return <div>Loading...</div>;
   }
 
+  if (bookmarks.length === 0) {
+    return (
+      <div className="text-center font-semibold">
+        Bookmark reminders will be shown here
+      </div>
+    );
+  }
+
   return (
     <div>
       {bookmarks.map((bookmark) => (

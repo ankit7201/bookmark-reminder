@@ -84,6 +84,7 @@ export const removeBookmarkForReminder = async (bookmarkId: string) => {
   let bookmarks: Bookmark[] = result[BOOKMARK_STORAGE_KEY] || [];
 
   bookmarks = bookmarks.filter((bookmark) => bookmark.id !== bookmarkId);
+
   await chrome.storage.local.set({
     [BOOKMARK_STORAGE_KEY]: bookmarks,
   });
