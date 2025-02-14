@@ -137,8 +137,8 @@ const Settings: React.FC = () => {
   }, [isDropdownOpen]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
-      <div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-lg p-6 space-y-8">
+    <div className="p-8">
+      <div className="w-full max-w-md mx-auto bg-white p-6 space-y-8">
         {/* Header */}
         <div className="flex items-center space-x-3 pb-4 border-b border-gray-100">
           <Bell className="w-6 h-6 text-indigo-500" />
@@ -155,7 +155,7 @@ const Settings: React.FC = () => {
                 className={`w-5 h-5 ${settings.isEnabled ? "text-green-500" : "text-gray-400"}`}
               />
               <label className="text-sm font-medium text-gray-700">
-                Extension Status
+                Listen to new added bookmarks
               </label>
             </div>
             <button

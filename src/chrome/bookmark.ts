@@ -4,7 +4,7 @@ import { removeBookmarkForReminder } from "./storage";
 
 // TODO: Name this removeBookmarkAndAlarm
 export const removeBookmark = async (bookmarkId: string) => {
-  await removeAlarm(`$alarm-{bookmarkId}`);
+  await removeAlarm(`alarm-${bookmarkId}`);
   await removeBookmarkForReminder(bookmarkId);
 };
 

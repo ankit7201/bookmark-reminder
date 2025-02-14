@@ -50,6 +50,14 @@ const Upcoming = () => {
     return <div>Loading...</div>;
   }
 
+  if (bookmarks.length === 0) {
+    return (
+      <div className="font-semibold text-center">
+        Bookmarks with upcoming reminders will be show here
+      </div>
+    );
+  }
+
   return (
     <div>
       {bookmarks.map((bookmark) => (

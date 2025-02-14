@@ -8,7 +8,7 @@ import Settings from "../components/Settings";
 const tabs = [
   {
     id: "notifications",
-    label: "Notififactions",
+    label: "Notifications",
     content: <Notifications />,
   },
   {
